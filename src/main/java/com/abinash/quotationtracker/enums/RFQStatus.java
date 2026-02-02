@@ -1,4 +1,7 @@
 package com.abinash.quotationtracker.enums;
 
-public class RFQStatus {
+public enum RFQStatus {
+    CUSTOMER,
+    ADMIN,
+    VENDOR
 }

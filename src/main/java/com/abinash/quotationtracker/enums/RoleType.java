@@ -1,4 +1,7 @@
 package com.abinash.quotationtracker.enums;
 
-public class RoleType {
+public enum RoleType {
+    OPEN,
+    CLOSED,
+    CONTRACT_CREATED
 }
