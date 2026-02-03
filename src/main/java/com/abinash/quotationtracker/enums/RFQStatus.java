@@ -1,7 +1,7 @@
 package com.abinash.quotationtracker.enums;
 
 public enum RFQStatus {
-    CUSTOMER,
-    ADMIN,
-    VENDOR
+    OPEN,
+    CLOSED,
+    CONTRACT_CREATED
 }

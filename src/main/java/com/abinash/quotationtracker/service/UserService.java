@@ -1,4 +1,8 @@
 package com.abinash.quotationtracker.service;
 
-public class UserService {
+import com.abinash.quotationtracker.entity.User;
+
+public interface UserService {
+
+    User registerUser(String name, String email, String password, String role);
 }
