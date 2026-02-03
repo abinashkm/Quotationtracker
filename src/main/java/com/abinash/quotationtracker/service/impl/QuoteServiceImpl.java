@@ -11,6 +11,7 @@ import com.abinash.quotationtracker.exception.ResourceNotFoundException;
 import com.abinash.quotationtracker.repository.QuoteRepository;
 import com.abinash.quotationtracker.repository.RFQRepository;
 import com.abinash.quotationtracker.repository.UserRepository;
+import com.abinash.quotationtracker.security.SecurityUtil;
 import com.abinash.quotationtracker.service.QuoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,27 @@ public class QuoteServiceImpl implements QuoteService {
         RFQ rfq = rfqRepository.findById(request.getRfqId())
                 .orElseThrow(() -> new ResourceNotFoundException("RFQ not found"));
 
-        User vendor = userRepository.findById(request.getVendorId())
+        Long vendorId = SecurityUtil.getCurrentUserId();
+
+        User vendor = userRepository.findById(vendorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vendor not found"));
 
         quoteRepository.findByRfqAndVendor(rfq, vendor)
                 .ifPresent(q -> {
                     throw new BadRequestException("Vendor has already submitted a quote");
                 });
+
         if (rfq.getStatus() != RFQStatus.OPEN) {
             throw new BadRequestException("Cannot submit quote. RFQ is closed");
         }
 
+        if (!SecurityUtil.getCurrentUserRole().equals("ROLE_VENDOR")) {
+            throw new BadRequestException("Only vendors can submit quotes");
+        }
+
+        if (!SecurityUtil.getCurrentUserRole().equals("ROLE_CUSTOMER")) {
+            throw new BadRequestException("Only customers can create contracts");
+        }
 
         // Create Quote
         Quote quote = new Quote();

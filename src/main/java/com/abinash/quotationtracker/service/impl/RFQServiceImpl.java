@@ -7,6 +7,7 @@ import com.abinash.quotationtracker.entity.User;
 import com.abinash.quotationtracker.exception.ResourceNotFoundException;
 import com.abinash.quotationtracker.repository.RFQRepository;
 import com.abinash.quotationtracker.repository.UserRepository;
+import com.abinash.quotationtracker.security.SecurityUtil;
 import com.abinash.quotationtracker.service.RFQService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,10 @@ public class RFQServiceImpl implements RFQService {
     @Override
     public RFQResponse createRFQ(CreateRFQRequest request) {
 
-        User customer = userRepository.findById(request.getCustomerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        Long userId = SecurityUtil.getCurrentUserId();
+
+        User customer = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         RFQ rfq = new RFQ();
         rfq.setTitle(request.getTitle());

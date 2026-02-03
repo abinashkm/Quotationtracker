@@ -5,6 +5,7 @@ import com.abinash.quotationtracker.dto.response.QuoteResponse;
 import com.abinash.quotationtracker.service.QuoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class QuoteController {
     private final QuoteService quoteService;
 
     @PostMapping
+    @PreAuthorize("hasRole('VENDOR')")
     public QuoteResponse submitQuote(@Valid @RequestBody SubmitQuoteRequest request) {
         return quoteService.submitQuote(request);
     }
