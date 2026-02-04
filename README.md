@@ -16,8 +16,9 @@ The application follows a strict **N-Tier Architecture**, ensuring separation of
 
 ### Request Flow
 The diagram below illustrates the lifecycle of a request: moving from the Client, passing through the Spring Security Filter Chain (JWT Validation), into the Service Layer for business logic, and finally interacting with the H2 Database via JPA.
-
-<img width="1240" height="2224" alt="Untitled diagram-2026-02-04-151232" src="https://github.com/user-attachments/assets/7ab78f58-8243-4917-86af-d03f53c11e0c" />
+<div align="center">
+    <img width="680" height="1000" alt="Untitled diagram-2026-02-04-151232" src="https://github.com/user-attachments/assets/7ab78f58-8243-4917-86af-d03f53c11e0c" />
+</div>
 
 
 ---
@@ -85,7 +86,7 @@ The system utilizes **H2 (In-Memory Database)** for high-speed development and t
 1.  **Clone the repository**
     ```bash
     git clone [https://github.com/yourusername/quotation-tracker-backend.git](https://github.com/yourusername/quotation-tracker-backend.git)
-    cd quotation-tracker-backend
+    cd quotationtracker
     ```
 
 2.  **Build the project**
