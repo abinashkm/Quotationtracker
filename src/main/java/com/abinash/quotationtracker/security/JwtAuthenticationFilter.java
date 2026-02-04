@@ -23,7 +23,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain) throws IOException, jakarta.servlet.ServletException {
+            FilterChain filterChain
+    ) throws IOException, jakarta.servlet.ServletException {
 
         String header = request.getHeader("Authorization");
 
@@ -31,12 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             Claims claims = jwtUtil.extractClaims(token);
-
+            String userId = claims.getSubject();
             String role = claims.get("role", String.class);
 
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
-                            claims.getSubject(),
+                            userId,
                             null,
                             List.of(() -> "ROLE_" + role)
                     );

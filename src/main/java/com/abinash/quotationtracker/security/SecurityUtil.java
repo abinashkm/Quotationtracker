@@ -7,11 +7,24 @@ public class SecurityUtil {
 
     public static Long getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return Long.valueOf(auth.getName());
+
+        if (auth == null || auth.getName() == null) {
+            return null;
+        }
+
+        return Long.parseLong(auth.getName());
     }
 
     public static String getCurrentUserRole() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getAuthorities().iterator().next().getAuthority();
+
+        if (auth == null || auth.getAuthorities().isEmpty()) {
+            return null;
+        }
+
+        return auth.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
     }
 }

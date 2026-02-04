@@ -30,6 +30,10 @@ public class QuoteServiceImpl implements QuoteService {
         RFQ rfq = rfqRepository.findById(request.getRfqId())
                 .orElseThrow(() -> new ResourceNotFoundException("RFQ not found"));
 
+        if (rfq.getStatus() != RFQStatus.OPEN) {
+            throw new BadRequestException("Cannot submit quote. RFQ is closed");
+        }
+
         Long vendorId = SecurityUtil.getCurrentUserId();
 
         User vendor = userRepository.findById(vendorId)
@@ -40,19 +44,6 @@ public class QuoteServiceImpl implements QuoteService {
                     throw new BadRequestException("Vendor has already submitted a quote");
                 });
 
-        if (rfq.getStatus() != RFQStatus.OPEN) {
-            throw new BadRequestException("Cannot submit quote. RFQ is closed");
-        }
-
-        if (!SecurityUtil.getCurrentUserRole().equals("ROLE_VENDOR")) {
-            throw new BadRequestException("Only vendors can submit quotes");
-        }
-
-        if (!SecurityUtil.getCurrentUserRole().equals("ROLE_CUSTOMER")) {
-            throw new BadRequestException("Only customers can create contracts");
-        }
-
-        // Create Quote
         Quote quote = new Quote();
         quote.setRfq(rfq);
         quote.setVendor(vendor);
@@ -61,7 +52,6 @@ public class QuoteServiceImpl implements QuoteService {
 
         Quote saved = quoteRepository.save(quote);
 
-        // Map to response DTO
         QuoteResponse response = new QuoteResponse();
         response.setId(saved.getId());
         response.setAmount(saved.getAmount());

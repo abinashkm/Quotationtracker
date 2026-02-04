@@ -24,7 +24,6 @@ public class AuthController {
     @PostMapping("/login")
     public Map<String, String> login(@Valid @RequestBody LoginRequest request) {
 
-        // 1. Authenticate email + password using Spring Security
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -32,17 +31,14 @@ public class AuthController {
                 )
         );
 
-        // 2. Fetch the authenticated user from database
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 3. Generate JWT with REAL userId and role
         String token = jwtUtil.generateToken(
                 user.getId(),
                 user.getRole().getRoleType().name()
         );
 
-        // 4. Return token to client
         return Map.of("token", token);
     }
 }
