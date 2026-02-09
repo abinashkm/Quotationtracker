@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/rfqs")
 @RequiredArgsConstructor
@@ -20,4 +22,11 @@ public class RFQController {
     public RFQResponse createRFQ(@Valid @RequestBody CreateRFQRequest request) {
         return rfqService.createRFQ(request);
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'VENDOR')")
+    public List<RFQResponse> getRFQs() {
+        return rfqService.getRFQsForCurrentUser();
+    }
+
 }
